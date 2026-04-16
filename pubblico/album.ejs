@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web-app</title>
+    <link rel="stylesheet"href="./Stili/album.css"/>
+    <script>
+        async function ric_alb(){
+            const ric = await fetch('/albumUtente');
+            const lista_album = await ric.json();
+            const divisore = document.getElementById('inferiore')
+            divisore.innerHTML='';
+            for (var i = 0; i<lista_album.length; i++){
+                    divisore.innerHTML += `<div class="alb">
+                                                <div class="polaroid" id="polaroid_${lista_album[i].id_Album}">
+                                                    <div class="cont_f">
+                                                    <img src="/${lista_album[i].nome_copertina}" class="copertina">
+                                                    </div>
+                                                    <div class="test">
+                                                        <label>${lista_album[i].città}</label>
+                                                    </div>
+                                                </div>
+                                                <div class="centrale">
+                                                    <div class="cit">
+                                                    <label>${lista_album[i].città}</label>
+                                                    </div>
+                                                    <div class="pulsanti">
+                                                        <button onclick="cambia_cop(${lista_album[i].id_Album})"><img class="puls" src="/stili/icone/sostituisci_foto.png"></button>
+                                                        <button onclick="elimina_al(${lista_album[i].id_Album})"><img class="puls" src="/stili/icone/cestino.png"></button>
+                                                    </div>
+                                                </div>
+                                                <div class="bott">
+                                                    <button onclick="foto(${lista_album[i].id_Album})">Foto</button>
+                                                </div>
+                                            </div>`;
+                }
+        }
+
+        ric_alb();
+
+
+        function mappa(){
+            window.location.href="/dashboard";
+        }
+        function album(){
+            window.location.href= "/album";
+        }
+        function profilo(){
+            window.location.href= "/profilo";
+        }
+        function creaAlbum(){
+            var l = Math.floor((screen.width-600)/2);
+            var t = Math.floor((screen.height-600)/2);
+            
+            const w = window.open("crea_a", "", `top=${t}, left=${l}, width=600, height=600, menubar=no, toolbar=no, scrollbars=no`);
+        }
+
+        async function elimina_al(id) {
+            const risposta = window.confirm('Sicuro di voler cancellare questo album e tutte le foto che contiene?');
+            if (!risposta) {
+                return;
+            }
+            const ris = await fetch (`/elimina_album/${id}`, {
+                method: 'DELETE'
+            })
+
+            if(ris.ok){
+                alert("Album eliminato con successo!");
+                location.reload();
+            } else {
+                alert("Problemi interni del server!");
+            }
+        }
+
+        function cambia_cop(id){
+            var l = Math.floor((screen.width-600)/2);
+            var t = Math.floor((screen.height-600)/2);
+            
+            const w = window.open(`cambia_cop/${id}`, "", `top=${t}, left=${l}, width=600, height=600, menubar=no, toolbar=no, scrollbars=no`);
+
+        }
+        
+        
+        function logout(){
+            window.location.href= "/logout";
+        }
+    </script>
+
+    <link rel="icon" href="/stili/icone/mappamondo.png" type="image/png">
+
+    <link
+    rel="stylesheet"
+     href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    />
+
+    <script
+     src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
+    </script>
+</head>
+<body>
+    <div class="superiore">
+        <div class="sinistra">
+            <button class="mappa" onclick="mappa()"><img id="m_mondo" src="/stili/icone/mappamondo.png"></button>
+            <button class="album" onclick="album()"><img id="m_mondo" src="/stili/icone/cartella.png"></button>
+            <button class="profilo" onclick="profilo()"><img id="m_mondo" src="/stili/icone/utente.png"></button>
+        </div>
+        <div class="centro">
+            <div class="crea">
+            <button class="creaA" onclick="creaAlbum()">Crea un nuovo Album</button>
+            </div>
+        </div>
+        <div class = "destra">
+            <button class="logout" onclick="logout()"><img id="m_mondo" src="/stili/icone/logout_arrotondato.png"></button>
+        </div>
+    </div>
+    <div class="inferiore" id="inferiore"></div>
+    
+
+</body>
+
+<script>
+    function foto(id_al){
+        window.location.href = `/foto/${id_al}`;
+    }
+</script>
+</html>

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web-app</title>
+    <link rel="stylesheet" href="./Stili/login.css" />
+
+
+
+</head>
+
+<body>
+    <div class='container'>
+        <form action="/carica" method="POST" enctype="multipart/form-data">
+            <h1>Crea un nuovo album</h1>
+
+            <label for="città">Inserisci la città:</label>
+            <input type="text" id="città" name="citta" required>
+            <label for="foto">Scegli le foto:</label>
+            <input type="file" id="foto" name="foto" multiple accept="image/*">
+            <label for="foto">Foto Copertina:</label>
+            <div id="griglia" class="griglia_foto"></div>
+            <progress id="progresso" value="0" max="100"></progress>
+            <button type="submit" id="submit">Carica</button>
+
+
+        </form>
+
+    </div>
+</body>
+<script>
+    var foto_copertina;
+
+    const foto_caricate = document.getElementById("foto");
+    const divisore = document.getElementById("griglia")
+    foto_caricate.addEventListener("change", (event) => {
+        divisore.innerHTML = '';
+        for (var i = 0; i < foto_caricate.files.length; i++) {
+            var nome = foto_caricate.files[i].name
+            url_foto = URL.createObjectURL(foto_caricate.files[i]);
+            divisore.innerHTML += `<input type="radio" id="img${i}" name="foto_copertina" value="${foto_caricate.files[i].name}"> <label for="img${i}" class="tit_foto">
+                                <img src="${url_foto}" class="foto_c">
+                                </label>`
+        }
+    })
+
+    const form = document.querySelector('form');
+    form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        const dati = new FormData(form);
+        document.querySelector('progress').style = "display: block"
+
+        const x = new XMLHttpRequest();
+
+        x.upload.addEventListener('progress', function (e) {
+            const percentuale = Math.round((e.loaded / e.total) * 100);
+            document.querySelector('progress').value = percentuale;
+        })
+
+        x.addEventListener('load', function () {
+            window.close();
+        });
+
+
+
+        x.open("POST", "/carica");
+        x.send(dati);
+    })
+
+
+
+
+
+</script>
+
+</html>

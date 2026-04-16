@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web-app</title>
+    <link rel="stylesheet"href="./Stili/login.css"/>
+    <link rel="icon" href="/stili/icone/mappamondo.png" type="image/png">
+    
+</head>
+<body>
+    <div class="container">
+        <h1>Registrazione</h1>
+            <form action="/registrazione" method="post">
+                <label for="nome">Nome</label>
+                <input type="text" id="Nome" name="Nome" required>
+                <label for="cognome">Cognome</label>
+                <input type="text" id="Cognome" name="Cognome" required>
+                <label for="email">Email</label>
+                <input type="email" id="Email" name="Email" required>
+                <label for="password">Password</label>
+                <input type="password" id="Password" name="Password" required>
+
+                <% if (errore) { %>
+                    <div id="messaggioErrore">
+                        <%= errore %>
+                    </div>
+                <% } %>
+                <button type="submit">Registrati</button>
+
+            </form>
+    </div>
+
+</body>
+</html>

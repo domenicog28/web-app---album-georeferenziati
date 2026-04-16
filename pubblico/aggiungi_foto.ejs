@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web-app</title>
+    <link rel="icon" href="/stili/icone/mappamondo.png" type="image/png">
+    <link rel="stylesheet"href="/Stili/login.css"/>
+    <script>
+        const id_album = window.location.pathname.split('/').pop();
+    </script>
+</head>
+<body>
+    <div class="container">
+        <form action="/aggiungi_foto" method="POST" enctype="multipart/form-data">
+            <input type="hidden" name="id_album" id="id_album">
+            <label for="foto">Scegli le foto:</label>
+            <input type="file" id="foto" name="foto" multiple accept="image/*">
+            <div id="griglia" class="griglia_foto"></div>
+            <button type="submit">Carica</button>
+            <% if (risposta) { %>
+                <script>window.close();</script>
+            <% } %>
+        </form>
+    </div>
+    
+</body>
+<script>
+    document.getElementById("id_album").value = id_album;
+    var foto_copertina;
+    
+        const foto_caricate = document.getElementById("foto");
+        const divisore = document.getElementById("griglia")
+        foto_caricate.addEventListener("change", (event)=>{
+            divisore.innerHTML='';
+        for(var i = 0; i<foto_caricate.files.length; i++){
+        var nome = foto_caricate.files[i].name
+        url_foto = URL.createObjectURL(foto_caricate.files[i]);
+        divisore.innerHTML += `<img src="${url_foto}" class="foto_c">`;            
+                }
+            })
+</script>
+</html>

@@ -1,0 +1,167 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    display: flex;
+    font-family: sans-serif;
+    background-color: #f5f5f5;
+    flex-direction: column;
+}
+
+.superiore {
+    width: 100%;
+    height: 50px;
+    display: flex;
+    padding: 3px;
+    justify-content: start;
+    align-items: center;
+    background-color: white;
+}
+
+.destro_f {
+    display: flex;
+    flex-grow: 1;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    margin-right: 50px;
+
+}
+
+.destro_f button {
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.destro_f button:hover {
+    background-color: #d6d6d6;
+}
+
+
+.inferiore {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 15px;
+    margin: 15px;
+}
+
+.foto {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+    cursor: pointer;
+}
+
+.foto:hover {
+    transform: scale(1.15);
+}
+
+#ingrandimento {
+    display: none;
+    position: fixed;
+    inset: 0;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+#ft_ing {
+    max-width: 90%;
+    max-height: 90%;
+}
+
+.indietro {
+    display: flex;
+    height: 35px;
+    width: 35px;
+    background-color: white;
+    justify-content: center;
+    align-items: center;
+    border: none;
+    cursor: pointer;
+
+}
+
+.indietro:hover {
+    background-color: #d6d6d6;
+}
+
+.indietro img {
+    height: 35px;
+    width: 35px;
+}
+
+
+
+.singolo {
+    position: relative;
+}
+
+.check {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    display: none;
+}
+
+
+#canc {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    display: none;
+    padding: 10px 20px;
+    margin-right: 20px;
+    cursor: pointer;
+}
+
+#canc:hover {
+    background-color: #0069d9;
+}
+
+.singolo {
+    position: relative;
+}
+
+
+@media only screen and (max-width:400px) {
+    .superiore {
+        height: 70px;
+        padding: 10px;
+    }
+
+
+    .inferiore {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 5px;
+        margin: 5px;
+    }
+
+    .foto {
+        width: 100%;
+        height: 100px;
+        object-fit: cover;
+        cursor: pointer;
+
+    }
+
+    .check {
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+        display: none;
+        transform: scale(2);
+    }
+
+    .destro_f {
+        margin-right: 30px;
+        gap: 0px
+    }
+}

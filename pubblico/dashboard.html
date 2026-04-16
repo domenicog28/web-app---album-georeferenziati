@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web-app</title>
+    <link rel="stylesheet"href="./Stili/dashboard.css"/>
+    <script>
+       
+        function mappa(){
+            window.location.href="/dashboard";
+        }
+        function album(){
+            window.location.href= "/album";
+        }
+        function profilo(){
+            window.location.href= "/profilo";
+        }
+
+        async function cerca(stato){
+            
+            const risposta = await fetch(`/cerca/${stato}`);
+            const risp = await risposta.json();
+            
+            const lat = risp.lat;
+            const lon = risp.lon;
+            map.setView([parseFloat(lat),parseFloat(lon)], 5);
+            
+        }
+        
+        function logout(){
+            window.location.href= "/logout";
+        }
+
+        
+    </script>
+
+    <link rel="icon" href="/stili/icone/mappamondo.png" type="image/png">
+
+    <link
+    rel="stylesheet"
+     href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    />
+
+    <script
+     src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
+    </script>
+</head>
+<body>
+    <div class="superiore">
+        <div class="sinistra">
+            <button class="mappa" onclick="mappa()"><img id="m_mondo" src="/stili/icone/mappamondo.png"></button>
+            <button class="album" onclick="album()"><img id="m_mondo" src="/stili/icone/cartella.png"></button>
+            <button class="profilo" onclick="profilo()"><img id="m_mondo" src="/stili/icone/utente.png"></button>
+        </div>
+        <div class = "centro">
+            <div class = "barra">
+                <input type="text" placeholder="Effettua una ricerca" id="stato">
+                <button class="cerca" onclick="cerca(getElementById('stato').value)"><img src="/stili/icone/ricerca.png"></button>
+            </div>
+        </div>
+        <div class = "destra">
+            <button class="logout" onclick="logout()"><img id="m_mondo" src="/stili/icone/logout_arrotondato.png"></button>
+        </div>
+            
+    </div>
+    <div id = "map"></div>
+    
+
+</body>
+<script>
+    const map = L.map('map').setView([45.4642 , 9.1900], 5);
+        
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+     attribution: '© OpenStreetMap'
+    }).addTo(map);
+
+    async function caricaMarker() {
+        const ric = await fetch('/albumUtente');
+        const lista_album = await ric.json();
+        for(var i=0; i < lista_album.length; i++){
+            const lat = lista_album[i].lat;
+            const lon = lista_album[i].lon;
+            const coord = L.latLng(lat,lon);
+            const polaroid = `<div class="polaroid" id="polaroid_${lista_album[i].id_Album}">
+                                    <div class="cont_f" onclick="foto(${lista_album[i].id_Album})">
+                                        <img src="/${lista_album[i].nome_copertina}" class="copertina">
+                                    </div>
+                                    <div class="test">
+                                        <label>${lista_album[i].città}</label>
+                                    </div>
+                                </div>
+                                `;
+            const icona = L.divIcon({
+                html: polaroid,
+                className: 'leaf',
+                iconSize: [70, 90]
+            });                    
+            const marker = L.marker(coord, {icon:icona});
+            marker.addTo(map);
+            
+        }
+        
+    }
+
+    function foto(id_al){
+        window.location.href = `/foto/${id_al}`;
+    }
+
+    caricaMarker();
+</script>
+
+</html>

@@ -1,0 +1,14 @@
+#database
+database/data.db 
+
+#moduli node
+node_modules/
+
+#archivio foto
+storage/
+
+#test
+storage_test/
+database/data2.db 
+
+pubblico/Stili/icone/Thumbs.db

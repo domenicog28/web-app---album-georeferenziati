@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web-app</title>
+    <link rel="stylesheet"href="./Stili/album.css"/>
+    <link rel="icon" href="/stili/icone/mappamondo.png" type="image/png">
+    <script>
+        function mappa(){
+            window.location.href="/dashboard";
+        }
+        function album(){
+            window.location.href= "/album";
+        }
+        function profilo(){
+            window.location.href= "/profilo";
+        }
+
+        
+        
+        function logout(){
+            window.location.href= "/logout";
+        }
+    </script>
+</head>
+<body>
+    <div class="superiore">
+        <div class="sinistra">
+            <button class="mappa" onclick="mappa()"><img id="m_mondo" src="/Stili/icone/mappamondo.png"></button>
+            <button class="album" onclick="album()"><img id="m_mondo" src="/Stili/icone/cartella.png"></button>
+            <button class="profilo" onclick="profilo()"><img id="m_mondo" src="/Stili/icone/utente.png"></button>
+        </div>
+        <div class = "centro">
+        </div>
+        <div class = "destra">
+            <button class="logout" onclick="logout()"><img id="m_mondo" src="/stili/icone/logout_arrotondato.png"></button>
+        </div>
+            
+    </div>
+    <div class="inferiore">
+    <div class='container'>
+        <form action="/cambia_p" method="POST">
+            <h1>Cambia Password</h1>
+            <label for="vecchia_password">Vecchia password:</label>
+            <input type="password" id="vecchia_password" name="vecchia_password">
+            <label for="nuova_pass">Nuova password:</label>
+            <input type="password" id="nuova_pass" name="nuova_pass">
+            <% if (risposta) { %>
+                    <div id="messaggio">
+                        <%= risposta %>
+                    </div>
+            <% } %>
+            <button type="submit" class="carica">Cambia Password</button>
+            <div>
+                 <button onclick="cancellaAcc()" class="carica" style="margin-top: 20px;">Cancella Account</button>
+            </div>
+        </form>
+    </div>
+    </div>
+</body>
+<script>
+    async function cancellaAcc(){
+        const risposta = window.confirm("Sicuro di voler cancellare l'account?");
+        if(!risposta){
+            return
+        }
+        const risp = await fetch ('/eliminaAcc', { method: "DELETE"});
+    
+
+        if(risp.ok){
+            window.location.href = "/";
+        } else {
+            alert('Problemi interni del server, alcuni file potrebbero essere andati persi!')
+        }
+    }
+</script>
+</html>

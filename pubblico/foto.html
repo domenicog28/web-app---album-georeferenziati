@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web-app</title>
+    <link rel="stylesheet"href="/Stili/foto.css"/>
+    <link rel="icon" href="/stili/icone/mappamondo.png" type="image/png">
+    <script>
+        const id_album = window.location.pathname.split('/').pop();
+        async function chiedi_foto(id_al) {
+            const ric = await fetch(`/fotoAlbum/${id_al}`);
+            const ft_js = await ric.json();
+            const divisore = document.getElementById('inferiore');
+            divisore.innerHTML='';
+            for (var i=0; i<ft_js.length; i++){
+                divisore.innerHTML += ` <div class="singolo">
+                                        <img src=/${ft_js[i].nome_foto} class="foto" onclick=apri(this.src)>
+                                        <input type="checkbox" class="check" id="check${i}" value="${ft_js[i].id_foto}">
+                                        </div>
+                                        `;
+            }
+        }
+
+        chiedi_foto(id_album);
+
+        function indietro(){
+            window.history.back();
+        }
+
+        function apri(fot){
+            document.getElementById("ft_ing").src = fot;
+            document.getElementById("ingrandimento").style.display = "flex";
+            
+        }
+
+        function chiudi(){
+            document.getElementById("ingrandimento").style.display = "none";
+        }
+
+        function aggiungi(){
+            var l = Math.floor((screen.width-600)/2);
+            var t = Math.floor((screen.height-600)/2);
+            
+            const w = window.open(`/agg_f/${id_album}`, "", `top=${t}, left=${l}, width=600, height=400, menubar=no, toolbar=no, scrollbars=no`);
+        }
+
+         async function cancella(){
+            const risposta = window.confirm('Sicuro di voler cancellare le foto selezionate?');
+            const selezione = Array.from(document.querySelectorAll(".check:checked")).map(check=>check.value);
+            const parametri = new URLSearchParams();
+            selezione.forEach(id=>parametri.append('id', id));
+
+
+            if (!risposta) {
+                return;
+            }
+            const ris = await fetch (`/cancella_foto?${parametri.toString()}`, {
+                method: 'DELETE'
+            })
+
+            if(ris.ok){
+                alert("foto eliminate con successo!");
+                location.reload();
+            } else {
+                alert("Problemi interni del server!");
+            }
+        }
+
+       
+        
+    </script>
+
+</head>
+<body>
+    <div class="superiore">
+        <div class="sinistro_f">
+            <button class="indietro" onclick="indietro()"><img id="m_mondo" src="/stili/icone/indietro.png"></button>
+        </div>
+        <div class="destro_f" id="destro_f">
+            <button class="aggiungi" onclick="aggiungi()"><img src="/stili/icone/aggiungi.png" ></button>
+            <button class="rimuovi" onclick="rimuovi()" id="rimuovi"><img src="/stili/icone/rimuovi.png"></button>
+        </div>
+        <button onclick="cancella()" id="canc">Cancella</button>
+    </div>
+    <div class="inferiore" id="inferiore"></div>
+    <div id="ingrandimento" onclick="chiudi()">
+        <img id="ft_ing">
+    </div>
+    
+</body>
+
+<script>
+    function rimuovi(){
+        document.getElementById("destro_f").style.marginRight = "0px";
+        document.getElementById("destro_f").style.marginLeft = "55px";
+        document.getElementById("canc").style.display= "block";
+        const check = document.querySelectorAll(".check");
+        check.forEach(checkb => {
+            checkb.style.display = "block";
+        });
+        document.getElementById("rimuovi").onclick = function(){
+            deseleziona();
+        };
+
+    }
+
+    function deseleziona(){
+        document.getElementById("destro_f").style.marginRight = "55px";
+        document.getElementById("destro_f").style.marginLeft = "0px";
+        document.getElementById("canc").style.display= "none";
+        const check = document.querySelectorAll(".check");
+        check.forEach(checkb => {
+            checkb.style.display = "none";
+        });
+        document.getElementById("rimuovi").onclick = function(){
+            rimuovi();
+        };
+    }
+</script>
+</html>
