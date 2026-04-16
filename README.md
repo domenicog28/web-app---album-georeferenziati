@@ -19,6 +19,8 @@ Funzionalità principali
 
 Come avviare il progetto in locale
 
+inserisci un email valida nella funzione cerca.
+
 Prerequisiti
 - Node.js installato
 
