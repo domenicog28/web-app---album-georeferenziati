@@ -1,12 +1,13 @@
 /*In seguito sono richieste la funzione per l'inizializzazione del db, registrazione utente e autenticazione.Il server è stato creato con express. Avviato il server è possibile dal browser richiamare la prima pagina da http:localhost:3000/ .
 la libreria path è utilizzata per indirizzare su alcune richieste il server alla directory pubblico, questo perchè il template engine per l'invio di pagine .ejs lo prevedeva.
 la libreria cookie-session è stata utilizzata per i cookie di sessione da inviare all'utente una volta autentificato o dopo l'avvenuta registrazione.*/ 
+require('dotenv').config();
 
 const inizializzazioneDB = require('./database/initDB.js');
 const {regUt, autenticazioneUt, aggiungi_album, aggiungi_foto, cambia_copertina, verifica_pass, cambia_pass, albumXut, fotoXalb, cancella_foto, cancella_album, nome_fXid, elimina_ut} = require('./database/funcDB.js');
 const express = require ('express');
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 const path = require('path');
 const fs = require('fs');
 const cookieSession = require('cookie-session');
@@ -19,7 +20,7 @@ const {v4 : uuidv4} = require('uuid');
 const multer = require('multer');
 const storage = multer.diskStorage({
     destination : (req,file,cb)=>{
-        cb(null, path.join(__dirname,'storage'));
+        cb(null, process.env.STORAGE_PATH || path.join(__dirname,'storage'));
     },
     filename : (req, file, cb)=>{
         const estensione = path.extname(file.originalname);
@@ -41,7 +42,7 @@ async function avviaServer(){
 
         /*le funzioni utilizzate qui di seguito servono per fornire ad express gli strumenti per comprendere meglio le request dal client e fornire le adeguate risposte.*/
 
-        app.use(express.static(path.join(__dirname, 'storage')));
+        app.use(express.static(path.join(process.env.STORAGE_PATH)));
         app.use(express.static(path.join(__dirname, 'pubblico'))); //per l'invio di pagine statiche .html
         app.set('views', path.join(__dirname, 'pubblico')); //indica a express dove trovare le views
         app.set('view engine', 'ejs'); // template engine
@@ -50,7 +51,7 @@ async function avviaServer(){
         /*codifica il cookie da inviare al client tramite le keys che possono essere qualsiasi stringa. ha un età che se scaduta invalida il cookie.*/
         app.use(cookieSession({
             name: 'session',
-            keys: ['unaStringaCasualeLunga123!', 'unaStringaCasualeLunga456!'],
+            keys: [process.env.SESSION_KEY_1, process.env.SESSION_KEY_2],
             httpOnly: true,
             maxAge: 120*60*1000
         }))
@@ -239,7 +240,7 @@ async function avviaServer(){
             for(var i = 0; i<foto.length;i++){
                 const prom = await cancella_foto(foto[i].id_foto);
                 if(prom){
-                    const percorso = path.join(__dirname,'storage', foto[i].nome_foto); 
+                    const percorso = path.join(process.env.STORAGE_PATH, foto[i].nome_foto); 
                     await fs.promises.unlink(percorso);
                 }
             }
@@ -285,7 +286,7 @@ async function avviaServer(){
                 const prom = await cancella_foto(id[i]);
                 if(nome.risp){
                     if(prom){
-                        const percorso = path.join(__dirname,'storage', nome.nome);  
+                        const percorso = path.join(process.env.STORAGE_PATH, nome.nome);  
                         await fs.promises.unlink(percorso);
                     } else {
                         return res.sendStatus(500);
@@ -310,7 +311,7 @@ async function avviaServer(){
                 for(var j=0; j<foto.length; j++){
                     const prom = await cancella_foto(foto[j].id_foto);
                     if(prom){
-                    const percorso = path.join(__dirname,'storage', foto[j].nome_foto);  
+                    const percorso = path.join(process.env.STORAGE_PATH, foto[j].nome_foto);  
                     await fs.promises.unlink(percorso);
                 }
                 }
@@ -356,7 +357,7 @@ async function avviaServer(){
         async function cerca(città){
             let lat,lon;
             
-            const risposta = await fetch(`http://nominatim.openstreetmap.org/search?q=${città}&format=json&limit=1`, { headers: { 'User-Agent': 'Mozilla/5.0 (Node.js) tuaemail@aaa.it' }});
+            const risposta = await fetch(`http://nominatim.openstreetmap.org/search?q=${città}&format=json&limit=1`, { headers: { 'User-Agent': `Mozilla/5.0 (Node.js) ${process.env.USER_EMAIL || 'tuaemail@aaa.it'} `}});
             
             const arr = await risposta.json();
             

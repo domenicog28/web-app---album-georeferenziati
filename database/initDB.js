@@ -9,9 +9,9 @@ const path = require('path');
 async function inizializzazioneDB(){
     return new Promise ((resolve, reject)=>{
 
-        const path_cartella = path.join(__dirname, '../storage');
+        const path_cartella = process.env.STORAGE_PATH || path.join(__dirname, '../storage');
 
-        const db = new sqlite3.Database('./database/data.db', (err)=>{
+        const db = new sqlite3.Database(process.env.DB_PATH ||'./database/data.db', (err)=>{
             if (err){
                 return reject(err);
             }

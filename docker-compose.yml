@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  tesi-app:
+    build: .
+    container_name: tesi-app
+    ports:
+      - "${PORT}:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=${PORT}
+      - STORAGE_PATH=${STORAGE_PATH}
+      - DB_PATH=${DB_PATH}
+      - SESSION_KEY_1=${SESSION_KEY_1}
+      - SESSION_KEY_2=${SESSION_KEY_2}
+      - USER_EMAIL=${USER_EMAIL}
+    volumes:
+      - ./database:/app/database
+      - ./storage:/app/storage
+    restart: unless-stopped

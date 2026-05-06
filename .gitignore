@@ -12,3 +12,5 @@ storage_test/
 database/data2.db 
 
 pubblico/Stili/icone/Thumbs.db
+
+.env

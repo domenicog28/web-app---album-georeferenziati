@@ -8,6 +8,8 @@ const bcrypt = require('bcrypt');
 const val = require('validator');
 const fs = require('fs').promises;
 
+const dbPath = process.env.DB_PATH || './database/data.db';
+
 /* registrazione utente nel database, se eventualmente l'email non fosse valida (questa eventualità nel server non può avvenire, perchè nella pagina html è presente l'input = 'email') o fosse già presente nel database la registrazione non va a buon fine. Inoltre la password viene memorizzata tramite hash della password realizzato con bcrypt. Se la registrazione è andata a buon fine, viene creata una cartella utente_(id_utente) per l'inserimento di un album. Eventuali errori vengono vengono tramite return inviati alla chiamata della funzione.*/
 
 
@@ -41,7 +43,7 @@ async function regUt(Nome, Cognome, Email, Password){
 
 async function autenticazioneUt(email, pass) {
     const passData = await new Promise ((resolve, reject) => {
-        const db = new sqlite3.Database('./database/data.db');
+        const db = new sqlite3.Database(dbPath);
         const query = "Select password_hash FROM utenti WHERE email = ?";
         db.get(query, email, (err,riga) => {
             if (err){
@@ -86,7 +88,7 @@ async function autenticazioneUt(email, pass) {
 
 async function aggiungi_album (id_utente, città, lat, lon){
     return new Promise ((resolve, reject)=>{
-        const db = new sqlite3.Database('./database/data.db');
+        const db = new sqlite3.Database(dbPath);
         const query = "INSERT INTO album (utente,città,lat,lon) values (?,?,?,?)";
             db.run(query, [id_utente, città, lat, lon], function (err){
                 if(err){
@@ -104,7 +106,7 @@ async function aggiungi_album (id_utente, città, lat, lon){
 
 async function aggiungi_foto(id_ute, id_alb,nome_foto){
     return new Promise ((resolve, reject)=>{
-        const db = new sqlite3.Database('./database/data.db');
+        const db = new sqlite3.Database(dbPath);
         const query = "INSERT INTO foto (utente,album,nome_foto) values (?,?,?)";
             db.run(query, [id_ute, id_alb, nome_foto], (err)=>{
                 if(err){
@@ -121,7 +123,7 @@ async function aggiungi_foto(id_ute, id_alb,nome_foto){
 
 async function cambia_copertina(foto_c, id_al){
     return new Promise ((resolve, reject)=>{
-        const db = new sqlite3.Database('./database/data.db');
+        const db = new sqlite3.Database(dbPath);
         const query = "UPDATE album SET nome_copertina = ? WHERE id_album = ?";
             db.run(query, [foto_c, id_al], (err)=>{
                 if(err){
@@ -137,7 +139,7 @@ async function cambia_copertina(foto_c, id_al){
 //Funzione accessoria per verificare se l'email inserita non è già nel DB
 function verificaEmail(email){
     return new Promise((resolve,reject)=>{
-        const db = new sqlite3.Database('./database/data.db');
+        const db = new sqlite3.Database(dbPath);
         const query = "SELECT email FROM utenti WHERE email = ?";
         db.get(query, email, (err,riga) => {
             if (err) {
@@ -160,7 +162,7 @@ function hashP(pass){
 
 function cerc_id(email){
     return new Promise((resolve, reject)=>{
-        const db = new sqlite3.Database('./database/data.db');
+        const db = new sqlite3.Database(dbPath);
         const query = "SELECT id_Utente FROM utenti WHERE email = ?";
         
         db.get(query, email, (err, riga)=>{
@@ -178,7 +180,7 @@ function cerc_id(email){
 
 async function registrazioneDB(Nome, Cognome, Email, Password) {
     return new Promise ((resolve, reject)=>{
-        const db = new sqlite3.Database('./database/data.db');
+        const db = new sqlite3.Database(dbPath);
         const utente = "INSERT INTO utenti (nome, cognome, email, password_hash) values (?,?,?,?)";
             db.run(utente, [Nome,Cognome,Email,Password], (err) => {
                 if (err) {
@@ -198,7 +200,7 @@ async function registrazioneDB(Nome, Cognome, Email, Password) {
 async function verifica_pass(id_ut, pass){ 
 
     const pass_h = await new Promise((resolve,reject)=>{
-        const db = new sqlite3.Database('./database/data.db');
+        const db = new sqlite3.Database(dbPath);
         const query = "SELECT password_hash FROM utenti WHERE id_Utente = ?";
         db.get(query, id_ut, (err,riga)=>{
             if(err){
@@ -219,7 +221,7 @@ async function verifica_pass(id_ut, pass){
 async function cambia_pass(id, pass_n){
     const pass_n_hash = await hashP(pass_n);
     return new Promise((resolve, reject)=>{
-        const db = new sqlite3.Database('./database/data.db');
+        const db = new sqlite3.Database(dbPath);
         const query = "UPDATE utenti SET password_hash = ? WHERE id_Utente = ?";
         db.run(query, [pass_n_hash,id ], (err)=>{
              if(err){
@@ -238,7 +240,7 @@ async function cambia_pass(id, pass_n){
 
 function albumXut(id_ut){
     return new Promise((resolve, reject)=>{
-        const db = new sqlite3.Database('./database/data.db');
+        const db = new sqlite3.Database(dbPath);
         const query = "SELECT * FROM album WHERE utente = ?";
         db.all(query, id_ut, (err,album)=>{
             if(err){
@@ -256,7 +258,7 @@ function albumXut(id_ut){
 
 function fotoXalb(id_al){
     return new Promise((resolve, reject)=>{
-        const db = new sqlite3.Database('./database/data.db');
+        const db = new sqlite3.Database(dbPath);
         const query = "SELECT * FROM foto WHERE album = ?";
         db.all(query,id_al, (err,foto)=>{
             if(err){
@@ -273,7 +275,7 @@ function fotoXalb(id_al){
 
 function cancella_foto(id){
     return new Promise((resolve, reject)=>{
-        const db = new sqlite3.Database('./database/data.db');
+        const db = new sqlite3.Database(dbPath);
         const query = "DELETE FROM foto WHERE id_foto = ?";
         db.run(query, id, (err)=>{
             if(err){
@@ -290,7 +292,7 @@ function cancella_foto(id){
 
 function cancella_album(id){
      return new Promise((resolve, reject)=>{
-        const db = new sqlite3.Database('./database/data.db');
+        const db = new sqlite3.Database(dbPath);
         const query = "DELETE FROM album WHERE id_Album = ?";
         db.run(query, id, (err)=>{
             if(err){
@@ -307,7 +309,7 @@ function cancella_album(id){
 
 function nome_fXid(id){
     return new Promise((resolve,reject)=>{
-        const db = new sqlite3.Database('./database/data.db');
+        const db = new sqlite3.Database(dbPath);
         const query = "SELECT nome_foto FROM foto WHERE id_foto = ?";
         db.get(query, id, (err,nome)=>{
             if(err){
@@ -327,7 +329,7 @@ function nome_fXid(id){
 
 function elimina_ut(id){
     return new Promise((resolve, reject)=>{
-        const db = new sqlite3.Database('./database/data.db');
+        const db = new sqlite3.Database(dbPath);
         const query = "DELETE FROM utenti WHERE id_Utente = ?";
         db.run(query, id, (err)=>{
             if(err){

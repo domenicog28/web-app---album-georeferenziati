@@ -17,12 +17,25 @@ Funzionalità principali
 - Visualizzazione degli album su mappa interattiva
 - Marker dinamici sulla mappa per ogni album creato
 
-Come avviare il progetto in locale
+Come avviare il progetto tramite docker o avvio locale
+
+Setup iniziale (obligatorio per Docker e Locale)
+1- Apri il terminale(cmd) nella cartella del progetto e esegui: copy .env.example .env
+2- Modificare l'email nel .env con la tua email (per Nominatim)
 
 Prerequisiti
-- Node.js installato
+- Docker Desktop installato
+
+oppure per avvio locale
+- Node.js v24.x (o superiore)
+- npm
 
 Avvio Server
-- npm run dev
+docker-compose up
+
+Avvio locale Server
+1- npm install
+2- node main.js
+
 
 Apri il browser su: http://localhost:3000
