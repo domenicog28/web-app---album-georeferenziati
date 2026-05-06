@@ -1,43 +1,50 @@
-Web App — Album Georeferenziati
+# Web App — Album Georeferenziati
 
-Applicazione web per la creazione e gestione di album fotografici 
-georeferenziati. Il backend è sviluppato in Node.js e espone API REST 
-per la gestione degli album, delle foto e delle coordinate geografiche 
-associate.
+Applicazione web per la creazione e gestione di album fotografici georeferenziati. Il backend è sviluppato in Node.js e espone API REST per la gestione degli album, delle foto e delle coordinate geografiche associate.
 
-Tecnologie utilizzate
+## Tecnologie utilizzate
+
 - **Backend**: Node.js, Express
 - **Database**: SQLite
 - **Frontend**: HTML, CSS, JavaScript
 - **Mappe**: Leaflet, Nominatim
 
-Funzionalità principali
+## Funzionalità principali
+
 - Creazione e rimozione di album fotografici
 - Associazione di un luogo geografico ad ogni album
 - Visualizzazione degli album su mappa interattiva
 - Marker dinamici sulla mappa per ogni album creato
 
-Come avviare il progetto tramite docker o avvio locale
+## Come avviare il progetto tramite docker o avvio locale
 
-Setup iniziale (obligatorio per Docker e Locale)
-1- Apri il terminale(cmd) nella cartella del progetto e esegui: copy .env.example .env
-2- Modificare l'email nel .env con la tua email (per Nominatim)
+### Setup iniziale (obligatorio per Docker e Locale)
+1- Apri il terminale(cmd) nella cartella del progetto e esegui: `copy .env.example .env`
+2- Modificare l'email nel `.env` con la **tua email** (per Nominatim)
 
 inserisci un email valida nella funzione cerca.
 
-Prerequisiti
+### Prerequisiti
+
+**Per Docker**
 - Docker Desktop installato
 
-oppure per avvio locale
+**Per avvio locale:**
 - Node.js v24.x (o superiore)
 - npm
 
-Avvio Server
+
+### Avvio con Docker (CONSIGLIATO)
+
+```bash
 docker-compose up
+```
 
-Avvio locale Server
-1- npm install
-2- node main.js
+### Avvio locale
 
+```bash
+npm install
+node main.js
+```
 
 Apri il browser su: http://localhost:3000
