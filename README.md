@@ -23,6 +23,8 @@ Setup iniziale (obligatorio per Docker e Locale)
 1- Apri il terminale(cmd) nella cartella del progetto e esegui: copy .env.example .env
 2- Modificare l'email nel .env con la tua email (per Nominatim)
 
+inserisci un email valida nella funzione cerca.
+
 Prerequisiti
 - Docker Desktop installato
 
